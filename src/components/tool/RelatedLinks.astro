@@ -1,0 +1,71 @@
+---
+---
+
+<section class="section" aria-labelledby="related-title">
+  <div class="container">
+    <p class="eyebrow">Keep reading</p>
+    <h2 id="related-title">Related pages</h2>
+    <ul class="related-list">
+      <li>
+        <a href="/blog/how-to-build-your-first-dqf/">
+          <span class="related-title">How to build your first DQF</span>
+          <span class="related-copy">A step-by-step guide to the documents, dates, and common gaps.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/privacy/">
+          <span class="related-title">Privacy policy</span>
+          <span class="related-copy">What is stored in your browser and what this build does not collect.</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .related-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .related-list a {
+    display: block;
+    min-height: 44px;
+    padding: var(--space-5);
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    text-decoration: none;
+    transition: opacity 150ms ease, transform 150ms ease;
+  }
+
+  .related-list a:hover {
+    transform: translateY(-1px);
+    border-color: var(--manila-deep);
+  }
+
+  .related-title {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .related-copy {
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 720px) {
+    .related-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,189 @@
+---
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+
+const path = '/blog/how-to-build-your-first-dqf/';
+const title = 'How to Build Your First DQF (Driver Qualification File)';
+const description =
+  'A step-by-step guide to building a driver qualification file: which documents belong in it, how long each one lasts, common gaps, and how to track the next due date.';
+---
+
+<ArticleLayout title={title} description={description} path={path}>
+  <p>
+    A driver qualification file (DQF) is the record a motor carrier keeps for each driver it employs
+    or uses. It is not a single form. It is a folder of documents that prove the driver was
+    qualified when hired and has stayed qualified since. For a new owner-operator, the first DQF is
+    usually assembled in a hurry after authority is granted, and the dates are entered once and then
+    forgotten.
+  </p>
+  <p>
+    This guide walks through the documents, the dates that matter, and the places where a small
+    fleet most often loses track. It is a guide, not a compliance determination. The rule references
+    are engineering pointers, not legal advice.
+  </p>
+
+  <h2>What belongs in a driver qualification file</h2>
+  <p>
+    Under 49 CFR Part 391, a DQF generally includes the driver's application, a motor vehicle record
+    (MVR) from each state where the driver held a license in the past three years, a road test
+    certificate or equivalent, a medical examiner's certificate, employment verification, and the
+    annual review of the driving record. Some documents are collected once. Others repeat on a
+    schedule.
+  </p>
+  <p>
+    For a small operation, it helps to separate the folder into two ideas: <strong>one-time
+    documents</strong> that prove the driver was qualified at hire, and <strong>recurring
+    documents</strong> that need a new date on a regular cadence. A folder that mixes the two tends
+    to look complete while a recurring date quietly passes.
+  </p>
+
+  <h2>The one-time documents</h2>
+  <ul>
+    <li>
+      <strong>Road test certificate.</strong> 49 CFR 391.31. The road test is a one-time document
+      unless the driver changes employers or the certificate is no longer valid under the rule.
+    </li>
+    <li>
+      <strong>Employment verification.</strong> 49 CFR 391.51(b)(2). The file should show that the
+      previous employer's safety performance history was requested and reviewed. Like the road test,
+      it is a hire-time document, not a recurring date.
+    </li>
+    <li>
+      <strong>Driver application and related hiring records.</strong> These are also one-time, but
+      they are not date calculations. Keep them in the folder and review them when a driver moves to
+      a new role.
+    </li>
+  </ul>
+  <p>
+    One-time does not mean "file it and forget it." If a driver leaves and is rehired, or if the
+    operation changes from non-CDL to CDL, the one-time documents may need to be refreshed. The
+    tracker shows them as "on file" instead of inventing a due date.
+  </p>
+
+  <h2>The recurring documents and their dates</h2>
+  <p>
+    These are the dates that move. Each one has an anchor date you already know and a period you can
+    calculate.
+  </p>
+  <ul>
+    <li>
+      <strong>Medical examiner's certificate.</strong> 49 CFR 391.45(b). The certificate itself
+      carries an expiration date, and that date always wins. If a driver only remembers the issue
+      date, a 24-month estimate is a fallback, not a guarantee. Examiners can issue a shorter
+      certificate.
+    </li>
+    <li>
+      <strong>MVR pull.</strong> 49 CFR 391.25(c)(2). The next pull is generally due 12 months after
+      the last one. The date you enter should be the date the report was actually pulled, not the
+      date it was filed.
+    </li>
+    <li>
+      <strong>Annual review of driving record.</strong> 49 CFR 391.25(a). The review is an annual
+      event. Twelve months after the last review is a useful planning date, even if your internal
+      process runs a few days early.
+    </li>
+    <li>
+      <strong>CDL expiration.</strong> 49 CFR Part 383. CDL validity is set by the issuing state.
+      There is no single federal cycle to assume, so the tracker uses only the expiration date on
+      the license.
+    </li>
+  </ul>
+
+  <h2>A simple build order</h2>
+  <ol>
+    <li>
+      <strong>Start with the driver, not the folder.</strong> Create one record per driver. Use a
+      name or a nickname; the label is only for you.
+    </li>
+    <li>
+      <strong>Enter the dates you can prove.</strong> Pull the medical certificate, the last MVR,
+      the license, and the last annual review. Enter the dates printed on those documents. If a date
+      is missing, leave it blank rather than guessing.
+    </li>
+    <li>
+      <strong>Mark one-time documents as on file.</strong> Add the road test and employment
+      verification dates so the folder has a complete shape. The tracker will not turn them into
+      recurring due dates.
+    </li>
+    <li>
+      <strong>Write down the next date for each recurring item.</strong> The tracker calculates
+      medical, MVR, CDL, and annual review dates and groups them into overdue, 30-day, and 60-day
+      buckets.
+    </li>
+    <li>
+      <strong>Back up the file.</strong> Export a JSON backup before clearing browser data or moving
+      to another device. The export contains the labels and dates you entered, so store it somewhere
+      private.
+    </li>
+  </ol>
+
+  <h2>Try it with example dates</h2>
+  <p>
+    You can see the calculation without typing anything by opening the tracker with a set of example
+    dates. The link below fills a draft driver with a medical expiration, an MVR pull, an annual
+    review, a road test, and an employment verification date. The draft is not saved until you click
+    "Save these dates."
+  </p>
+  <p>
+    <a href="/dqf-expiration-tracker/?medical=2026-05-01&amp;mvr=2026-10-01&amp;annual=2026-08-15&amp;road=2024-02-01&amp;ev=2024-01-15" data-cta-source="article_cta">
+      Open the DQF expiration tracker with these example dates
+    </a>
+  </p>
+  <p>
+    The example uses a medical expiration in the past so you can see the overdue state. Change any
+    date to match your own records, or clear the example and start with a blank driver.
+  </p>
+
+  <h2>Common gaps in a first DQF</h2>
+  <ul>
+    <li>
+      <strong>Using the issue date as the expiration date.</strong> The certificate's printed
+      expiration date is the one that matters. The issue date is only a fallback for an estimate.
+    </li>
+    <li>
+      <strong>Recording the MVR file date instead of the pull date.</strong> The 12-month clock
+      starts when the report is pulled, not when it is filed.
+    </li>
+    <li>
+      <strong>Assuming a CDL lasts a fixed number of years.</strong> State-issued credentials vary.
+      Enter the date on the license.
+    </li>
+    <li>
+      <strong>Skipping the annual review because the MVR is current.</strong> They are separate
+      requirements with separate dates.
+    </li>
+    <li>
+      <strong>Keeping the only copy in one browser.</strong> A cleared browser profile removes
+      localStorage. Export a backup and keep it with the rest of your records.
+    </li>
+  </ul>
+
+  <h2>What the tracker does not do</h2>
+  <p>
+    The tracker does not decide whether your file is complete, and it does not replace a safety
+    consultant, an audit, or legal advice. It covers six date-based documents and compares them with
+    your device date. Random testing is a program-level requirement and is listed for reference
+    only. If a rule changes, the rule version on the page tells you when the table was last updated.
+  </p>
+  <p>
+    The value is narrow but real: the next date is visible before it becomes a problem. For a
+    one-person operation, that is often the difference between a calm file review and a rushed
+    search for a document that should have been refreshed months ago.
+  </p>
+
+  <h2>Keep the next date in front of you</h2>
+  <p>
+    Once the first driver is in, add the rest of the fleet up to five drivers. The fleet summary
+    shows the three most urgent items across all drivers, so you do not have to open each file to
+    find the next problem. When you are ready to start, open the tracker with a blank file or with
+    the example dates above.
+  </p>
+  <p>
+    <a href="/dqf-expiration-tracker/?medical=2027-01-15&amp;mvr=2026-11-01&amp;cdl=2028-03-15" data-cta-source="article_cta">
+      Start tracking your own DQF dates
+    </a>
+  </p>
+  <p class="note">
+    Estimated based on FMCSA Part 391. Not legal advice. This is a guide, not a compliance
+    determination. Last rule update: 2026-11-13.
+  </p>
+</ArticleLayout>

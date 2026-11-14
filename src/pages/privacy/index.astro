@@ -1,0 +1,167 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+
+const path = '/privacy/';
+const title = 'Privacy Policy — DQF Expiration Tracker';
+const description =
+  'How the DQF Expiration Tracker handles driver labels and dates locally, and what optional anonymous analytics (bucketed counts, page path, device type) are recorded with your consent.';
+
+import { CANONICAL_ORIGIN } from '../../lib/site';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: CANONICAL_ORIGIN + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: CANONICAL_ORIGIN + '/privacy/' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Privacy Policy — DQF Expiration Tracker',
+    url: CANONICAL_ORIGIN + '/privacy/',
+    inLanguage: 'en',
+    isPartOf: { '@type': 'WebSite', name: 'DQF Expiration Tracker', url: CANONICAL_ORIGIN + '/' },
+  },
+];
+---
+
+<LegalLayout title={title} description={description} path={path} updated="2026-11-13" jsonLd={jsonLd}>
+  <h2>Summary</h2>
+  <p>
+    The DQF Expiration Tracker is a free, single-page tool. The driver labels and dates you enter are
+    stored in your browser's localStorage and are never uploaded. Analytics are optional: if you
+    accept, we record anonymous, aggregated usage events (page path, device type, referrer host,
+    bucketed counts). If you reject, the tracker works the same and we only receive event names and
+    counts. You can export a JSON backup or delete your data at any time.
+  </p>
+
+  <h2>What this build stores in your browser</h2>
+  <ul>
+    <li><strong>Driver label or nickname</strong> (optional). Used only for display in your browser.</li>
+    <li><strong>Document dates</strong> you enter for the medical certificate, MVR, CDL, annual review, road test, and employment verification.</li>
+    <li><strong>CDL switch</strong>, which controls whether a CDL expiration is included in the calculation.</li>
+    <li><strong>Record metadata</strong>: a random identifier, a last-modified timestamp, the schema version, and the site identifier.</li>
+    <li><strong>Your analytics choice</strong>, stored under the key <code>dqf_consent_v1</code>.</li>
+  </ul>
+  <p>
+    Tracker records are stored under the localStorage key <code>dqf_tracker_v1</code>. If saved data
+    cannot be read, the original text may be moved to a quarantine key beginning with
+    <code>dqf_tracker_quarantine_</code> so it is not silently overwritten. You can download that
+    text from the warning banner and then delete it through your browser's site-data controls.
+  </p>
+
+  <h2>Optional analytics (your choice)</h2>
+  <p>
+    Analytics are off until you choose. The banner asks after your first interaction, and both
+    "Allow analytics" and "Reject" are always available. If you allow, the page sends events to our
+    own first-party endpoint <code>/bff/dqf-tracker/track</code>. We do not load third-party
+    analytics, advertising, or social scripts.
+  </p>
+  <p>Event rows can contain:</p>
+  <ul>
+    <li><strong>Event names</strong> such as <code>page_view</code>, <code>tracker_started</code>, <code>driver_added</code>, <code>result_viewed</code>, <code>json_exported</code>, <code>json_imported</code>, <code>data_cleared</code>, <code>dwell_recorded</code>, and <code>error_shown</code>.</li>
+    <li><strong>Bucketed counts</strong> such as "1 driver", "2 drivers", or "3–5 drivers"; overdue counts as "0", "1", or "2 or more". Exact counts are not sent.</li>
+    <li><strong>Context fields</strong>: page path, device type (desktop, tablet, mobile), referrer host, a time-on-page bucket, a render time in milliseconds, and fixed error codes.</li>
+    <li><strong>Session and visitor identifiers</strong>: a random session identifier stored in sessionStorage for the tab session, and a salted, one-way hashed visitor identifier computed on the server. We do not keep your IP address in analytics records.</li>
+  </ul>
+  <p>
+    <strong>Never recorded:</strong> driver names or nicknames, any document date, CDL dates, the
+    contents or file name of an exported or imported backup, your email address, or the full URL
+    including query string. Tracking is decoupled from your driver records: even if localStorage is
+    blocked, aggregated analytics still work.
+  </p>
+  <p>
+    If you reject analytics, the tracker sends only anonymous aggregate rows — the event name and a
+    count — with no business fields, no page path, and no identifiers. Refusing does not reduce the
+    functionality of the tracker.
+  </p>
+  <p>
+    You can change your choice at any time:
+    <button type="button" class="btn btn--ghost btn--small" id="reset-consent">
+      Reset my analytics choice
+    </button>
+  </p>
+  <script is:inline>
+    document.getElementById('reset-consent')?.addEventListener('click', function () {
+      try {
+        window.localStorage.removeItem('dqf_consent_v1');
+      } catch (e) {
+        /* storage blocked: nothing to reset */
+      }
+      window.location.reload();
+    });
+  </script>
+
+  <h2>What this build does not collect</h2>
+  <ul>
+    <li>No account, login, or email address is required.</li>
+    <li>No advertising, social, or third-party analytics script is loaded.</li>
+    <li>No payment information is collected. Payments are not available in this build.</li>
+    <li>No email reminders are available in this build.</li>
+    <li>No driver data is sent to a server for calculation. The calculation runs in your browser.</li>
+  </ul>
+  <p>
+    The static site and API may be delivered by hosting providers that keep standard access logs,
+    such as an IP address and request time, as part of normal web serving. API requests for analytics
+    are configured not to write access logs. We do not connect hosting logs to the data in your
+    browser.
+  </p>
+
+  <h2>Where the data lives and how long it is kept</h2>
+  <p>
+    The data lives in the browser profile you use. It stays there until you delete it, clear the
+    browser's site data, or the browser removes it under its own storage policies. It is not synced
+    between browsers, devices, or profiles. If you use private browsing, the browser may discard
+    localStorage when the private session ends.
+  </p>
+  <p>
+    If the browser blocks localStorage, the tracker switches to memory mode and shows a persistent
+    warning. In memory mode, data is kept only for the current page session and is lost when the tab
+    closes. Export a JSON backup if you need to keep the data.
+  </p>
+
+  <h2>How to access, export, or delete your data</h2>
+  <ul>
+    <li><strong>Access:</strong> open the tracker. The entered drivers and dates are displayed in the page.</li>
+    <li><strong>Export:</strong> use "Export JSON backup" in the Saved data panel. The file is created in your browser; it is not uploaded.</li>
+    <li><strong>Delete one driver:</strong> use "Remove driver." You have five seconds to undo the removal.</li>
+    <li><strong>Delete everything:</strong> use "Clear all driver data" and confirm. The tracker asks you to download a backup first.</li>
+    <li><strong>Delete through the browser:</strong> clear site data for this domain in your browser settings.</li>
+  </ul>
+  <p>
+    An exported backup contains the labels and dates you entered. Treat it like any other record file
+    and store it somewhere private.
+  </p>
+
+  <h2>California privacy notice (CCPA/CPRA)</h2>
+  <p>
+    This build does not sell or share personal information, and it does not use analytics for
+    cross-context behavioral advertising. The driver labels and dates you enter stay in your browser;
+    the operator does not receive them. Analytics, when you allow them, are limited to the aggregated
+    usage events described above. Because the operator does not receive the driver labels or dates, a
+    request to access or delete that data is usually fulfilled by the controls described above. If
+    you believe the operator holds personal information about you, contact us using the address below
+    and we will review the request.
+  </p>
+
+  <h2>Children</h2>
+  <p>
+    The tracker is intended for commercial drivers and fleet operators. It is not directed to
+    children, and we do not knowingly collect information from children.
+  </p>
+
+  <h2>Changes to this policy</h2>
+  <p>
+    If a future version adds payments, email reminders, or new analytics fields, this page will be
+    updated before those features are enabled. The "Last updated" date at the top shows the current
+    version.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Privacy questions: <strong>apj56423@gmail.com</strong>.
+  </p>
+</LegalLayout>

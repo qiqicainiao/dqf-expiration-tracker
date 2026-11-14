@@ -1,0 +1,19 @@
+# DQF Expiration Tracker
+
+> Free DQF expiration tracker for owner-operators and small fleets (1–5 drivers). Estimated next due dates based on FMCSA Part 391. Driver labels and dates stay in the browser; no account or upload.
+
+## Pages
+- [DQF Expiration Tracker](https://dqfsuite.com/dqf-expiration-tracker/): free date calculator for medical certificates, MVR pulls, CDL expiration, annual reviews, road tests, and employment verification.
+- [How to build your first DQF](https://dqfsuite.com/blog/how-to-build-your-first-dqf/): guide to the documents, dates, and common gaps. A guide, not a compliance determination.
+- [Privacy policy](https://dqfsuite.com/privacy/): local storage, export, deletion, and what this build does not collect.
+- [Terms of service](https://dqfsuite.com/terms/): service description, no legal advice, acceptable use, liability.
+
+## Facts
+- Rules version: 2026-11-13.
+- Price: free during validation. No payments are available in this build.
+- Data storage: browser localStorage under `dqf_tracker_v1`; JSON export and import are available.
+- Optional first-party analytics only with consent: event names, bucketed counts, page path, device type, referrer host. Never driver names, dates, or backup contents; rejecting sends only event names and counts.
+- Limits: up to 5 drivers per browser.
+
+## Disclaimer
+Estimated based on FMCSA Part 391. Not legal advice. Does not guarantee compliance or audit results.

@@ -1,0 +1,86 @@
+---
+---
+
+<section class="section" id="why-it-matters" aria-labelledby="why-title">
+  <div class="container why-grid">
+    <div>
+      <p class="eyebrow">Why it matters</p>
+      <h2 id="why-title">The file is only useful if the dates are current</h2>
+      <p>
+        49 CFR Part 391 requires a motor carrier to keep a driver qualification file for each driver.
+        The file is not a one-time hire document: medical certificates, MVR pulls, CDL credentials,
+        and annual reviews all move forward on their own schedule. When one of those dates slips, the
+        gap is usually discovered during a review or a roadside interaction, not on the day it
+        happened.
+      </p>
+      <p>
+        A paper folder and a desk calendar can work, but they depend on someone remembering to flip
+        the page. A spreadsheet can calculate dates, yet the formula is easy to break and the file is
+        often stored somewhere other than the browser you use every day. This tracker keeps the
+        arithmetic in one place, shows each document's citation, and puts the next date in front of
+        you as soon as you enter the record.
+      </p>
+      <p>
+        The goal is not to replace your safety consultant or your compliance software. It is to make
+        the next date visible for a one-person operation or a small fleet, without creating an account
+        or uploading driver information. You can use a nickname, enter only the dates you know, and
+        export a backup whenever you want.
+      </p>
+    </div>
+
+    <aside class="boundaries" aria-labelledby="boundaries-title">
+      <h3 id="boundaries-title">What this tracker does not do</h3>
+      <ul>
+        <li>It does not determine whether your DQF is complete or compliant.</li>
+        <li>It does not replace legal advice, an audit, or a safety consultant.</li>
+        <li>It does not track every DQF document, only the six date-based items listed on this page.</li>
+        <li>It does not cover random testing, which is a program-level requirement.</li>
+        <li>It does not use a server clock; dates are compared with your device date.</li>
+      </ul>
+      <p class="note">
+        Estimated based on FMCSA Part 391. Not legal advice. Rules can change.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .why-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .why-grid p {
+    max-width: 72ch;
+  }
+
+  .boundaries {
+    padding: var(--space-5);
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--stamp-red);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+  }
+
+  .boundaries ul {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+    padding-left: var(--space-4);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
+  .boundaries .note {
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .why-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

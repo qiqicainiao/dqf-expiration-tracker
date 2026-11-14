@@ -1,0 +1,81 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  updated?: string;
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, path, updated = '2026-11-13', jsonLd = [] } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={jsonLd}>
+  <article class="legal">
+    <div class="container legal-inner">
+      <header class="legal-header">
+        <p class="eyebrow">Legal</p>
+        <h1>{title}</h1>
+        <p class="legal-lede">{description}</p>
+        <p class="legal-meta">Last updated: {updated}</p>
+      </header>
+      <div class="prose">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-block: var(--space-7);
+  }
+
+  .legal-inner {
+    max-width: 840px;
+  }
+
+  .legal-header {
+    padding-bottom: var(--space-5);
+    margin-bottom: var(--space-5);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .legal-lede {
+    max-width: 70ch;
+    color: var(--ink-muted);
+    font-size: var(--text-lg);
+  }
+
+  .legal-meta {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: var(--text-xs);
+  }
+
+  .prose :global(h2) {
+    margin-top: var(--space-6);
+    font-size: var(--text-xl);
+  }
+
+  .prose :global(h3) {
+    margin-top: var(--space-5);
+    font-size: var(--text-lg);
+  }
+
+  .prose :global(p),
+  .prose :global(li) {
+    max-width: 74ch;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: var(--space-5);
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--space-2);
+  }
+</style>

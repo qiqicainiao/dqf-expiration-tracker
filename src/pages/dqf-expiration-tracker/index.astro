@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/tool/Hero.astro';
+import StaticSampleCard from '../../components/tool/StaticSampleCard.astro';
+import TrackerApp from '../../components/tool/TrackerApp';
+import RuleTable from '../../components/tool/RuleTable.astro';
+import HowItWorks from '../../components/tool/HowItWorks.astro';
+import WhyItMatters from '../../components/tool/WhyItMatters.astro';
+import Faq from '../../components/tool/Faq.astro';
+import Disclaimer from '../../components/tool/Disclaimer.astro';
+import RelatedLinks from '../../components/tool/RelatedLinks.astro';
+import { FAQ_ITEMS } from '../../lib/content/faq';
+import { CANONICAL_ORIGIN, RULES_VERSION } from '../../lib/site';
+
+const path = '/dqf-expiration-tracker/';
+const title = 'DQF Expiration Tracker — Free Driver Qualification File Dates';
+const description =
+  'Track medical card, MVR, CDL, annual review, road test and employment verification dates for up to 5 drivers. FMCSA Part 391 based. Free, no account, data stays local.';
+
+const appJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'DQF Expiration Tracker',
+  url: `${CANONICAL_ORIGIN}${path}`,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  description,
+  isAccessibleForFree: true,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    description: 'Free during validation',
+  },
+  featureList: [
+    'Estimated next DQF due dates for up to 5 drivers',
+    'Medical certificate, MVR, CDL, annual review, road test, and employment verification dates',
+    'Local browser storage with JSON export and import',
+  ],
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={[appJsonLd, faqJsonLd]}>
+  <Hero />
+  <StaticSampleCard />
+
+  <section class="section tool-section" aria-labelledby="start-title">
+    <div class="container">
+      <p class="eyebrow">Start your file · local only</p>
+      <h2 id="start-title">Enter the dates you already have</h2>
+      <p class="tool-intro">
+        Dates are calculated locally and compared with your device date. Use a nickname if you
+        prefer. Names and dates are never sent to us. Last rule update: {RULES_VERSION}.
+      </p>
+      <TrackerApp client:load />
+      <noscript>
+        <div class="noscript-note">
+          <h3>Enable JavaScript to use the tracker</h3>
+          <p>
+            The rule table, example output, and FAQ on this page are readable without JavaScript.
+            The interactive tracker needs JavaScript, and your data stays in your browser.
+          </p>
+        </div>
+      </noscript>
+    </div>
+  </section>
+
+  <RuleTable />
+  <HowItWorks />
+  <WhyItMatters />
+  <Faq />
+  <Disclaimer />
+  <RelatedLinks />
+</BaseLayout>
+
+<style>
+  .tool-section {
+    padding-block: var(--space-7);
+  }
+
+  .tool-intro {
+    max-width: 72ch;
+    color: var(--ink-muted);
+  }
+
+  .noscript-note {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    background: var(--paper-raised);
+    border: 1px dashed var(--ink-muted);
+    border-radius: var(--radius-sm);
+  }
+
+  .noscript-note h3 {
+    font-size: var(--text-lg);
+  }
+
+  .noscript-note p {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+</style>

@@ -1,0 +1,126 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+
+const path = '/terms/';
+const title = 'Terms of Service — DQF Expiration Tracker';
+const description =
+  'Terms for the free DQF Expiration Tracker: service description, no legal advice, local browser data, acceptable use, intellectual property, and limitation of liability.';
+
+import { CANONICAL_ORIGIN } from '../../lib/site';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: CANONICAL_ORIGIN + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Terms of Service', item: CANONICAL_ORIGIN + '/terms/' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Terms of Service — DQF Expiration Tracker',
+    url: CANONICAL_ORIGIN + '/terms/',
+    inLanguage: 'en',
+    isPartOf: { '@type': 'WebSite', name: 'DQF Expiration Tracker', url: CANONICAL_ORIGIN + '/' },
+  },
+];
+---
+
+<LegalLayout title={title} description={description} path={path} jsonLd={jsonLd}>
+  <h2>1. Service description</h2>
+  <p>
+    The DQF Expiration Tracker is a free web tool that calculates estimated next due dates for
+    selected driver qualification documents. It supports up to five drivers per browser and covers
+    the medical examiner's certificate, MVR pull, CDL expiration, annual review, road test, and
+    employment verification. Calculations run in your browser using the dates you enter and your
+    device date.
+  </p>
+  <p>
+    This build does not offer payments, PDF exports, email reminders, accounts, cloud sync, or team
+    features. Do not rely on a feature that is not visible in the current build.
+  </p>
+
+  <h2>2. Not legal advice</h2>
+  <p>
+    The tracker provides estimates for planning. It is not legal, compliance, or audit advice, and it
+    does not guarantee compliance or audit results. Rule references such as 49 CFR 391.45(b) are
+    engineering pointers. Regulations and state-issued credentials can change. Verify with FMCSA,
+    your state, or a qualified safety consultant before making a compliance decision.
+  </p>
+
+  <h2>3. Data and privacy</h2>
+  <p>
+    Driver labels and dates are stored in your browser's localStorage. They are not uploaded by this
+    build. You are responsible for exporting a backup before clearing browser data and for keeping
+    the backup file private. Optional first-party analytics record anonymous, aggregated usage
+    events only (event names, bucketed counts, page path, device type, referrer host) and never
+    driver names, dates, or backup contents; you can reject analytics and keep full functionality.
+    The <a href="/privacy/">privacy policy</a> describes storage, analytics consent, deletion, and
+    export in more detail.
+  </p>
+  <p>
+    If the browser blocks localStorage, the tracker may operate in memory mode and data will be lost
+    when the tab closes. The tracker displays a warning when this happens.
+  </p>
+
+  <h2>4. Payments and refunds (future)</h2>
+  <p>
+    Payments are not available in this build, and no purchase can be made. If paid features are added
+    later, the price, tax treatment, and refund policy will be published on a pricing page and in an
+    updated version of these terms before any charge is accepted. Nothing in this build creates a
+    paid subscription or a refund obligation.
+  </p>
+
+  <h2>5. Acceptable use</h2>
+  <p>You agree not to:</p>
+  <ul>
+    <li>use the tracker for unlawful purposes or to store data you do not have the right to hold;</li>
+    <li>attempt to disrupt, overload, reverse engineer, or bypass the site's security controls;</li>
+    <li>scrape or copy the site in a way that degrades service for other users;</li>
+    <li>misrepresent the tracker's output as a legal determination or an audit certification.</li>
+  </ul>
+
+  <h2>6. Intellectual property</h2>
+  <p>
+    The site's text, design, rule table, and code are owned by the site operator or its licensors and
+    are provided for your personal or internal business use. The driver data you enter belongs to
+    you. Exporting a backup does not transfer ownership of the site's content.
+  </p>
+
+  <h2>7. Disclaimer of warranties</h2>
+  <p>
+    The tracker is provided "as is" and "as available," without warranties of any kind, express or
+    implied, including fitness for a particular purpose, accuracy, or non-infringement. The
+    calculation depends on the dates you enter and on your device clock. A wrong input or a wrong
+    device date produces a wrong result.
+  </p>
+
+  <h2>8. Limitation of liability</h2>
+  <p>
+    To the maximum extent permitted by law, the site operator is not liable for indirect, incidental,
+    special, consequential, or punitive damages, or for lost profits, lost data, fines, or
+    compliance penalties arising from use of or inability to use the tracker. Where liability cannot
+    be excluded, it is limited to the amount you paid to use the tracker, which is zero for this
+    build.
+  </p>
+
+  <h2>9. Changes and termination</h2>
+  <p>
+    The operator may change, suspend, or discontinue the tracker or these terms. Material changes
+    will be reflected by the "Last updated" date. Continued use after a change means you accept the
+    updated terms. If you do not agree, stop using the tracker and delete the local data.
+  </p>
+
+  <h2>10. Governing law</h2>
+  <p>
+    These terms are governed by the laws of the operator's jurisdiction, without regard to conflict
+    of law rules. The specific jurisdiction is a placeholder to be confirmed before launch.
+  </p>
+
+  <h2>11. Contact</h2>
+  <p>
+    Questions about these terms: <strong>apj56423@gmail.com</strong>.
+  </p>
+</LegalLayout>

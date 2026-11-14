@@ -1,0 +1,89 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import { CANONICAL_ORIGIN, RULES_VERSION_LABEL } from '../lib/site';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found — DQF Expiration Tracker</title>
+    <meta name="description" content="That page does not exist. Open the DQF Expiration Tracker, privacy policy, or terms of service." />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="canonical" href={`${CANONICAL_ORIGIN}/404.html`} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="not-found-header">
+      <div class="container">
+        <a class="not-found-brand" href="/dqf-expiration-tracker/">DQF Expiration Tracker</a>
+      </div>
+    </header>
+    <main id="main" class="container not-found">
+      <p class="eyebrow">404 · File not found</p>
+      <h1>That page is not in this folder</h1>
+      <p>The address may be mistyped, or the page may have moved. These links are available:</p>
+      <ul class="not-found-links">
+        <li><a href="/dqf-expiration-tracker/">DQF Expiration Tracker</a></li>
+        <li><a href="/privacy/">Privacy policy</a></li>
+        <li><a href="/terms/">Terms of service</a></li>
+      </ul>
+      <p class="note">{RULES_VERSION_LABEL}</p>
+    </main>
+
+    <style>
+      .not-found-header {
+        padding-block: var(--space-4);
+        background: var(--paper-raised);
+        border-bottom: 2px solid var(--ink);
+      }
+
+      .not-found-brand {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        color: var(--ink);
+        font-family: var(--font-serif);
+        font-size: var(--text-lg);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .not-found {
+        max-width: 720px;
+        padding-block: var(--space-8);
+      }
+
+      .not-found h1 {
+        font-size: clamp(28px, 5vw, var(--text-2xl));
+      }
+
+      .not-found p {
+        max-width: 60ch;
+        color: var(--ink-muted);
+      }
+
+      .not-found-links {
+        display: grid;
+        gap: var(--space-2);
+        margin: var(--space-5) 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .not-found-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: var(--space-2) var(--space-3);
+        background: var(--paper-raised);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+      }
+    </style>
+  </body>
+</html>

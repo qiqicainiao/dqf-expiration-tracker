@@ -1,0 +1,142 @@
+---
+import { RULES_VERSION_LABEL } from '../../lib/site';
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+const links = [
+  { href: '/dqf-expiration-tracker/', label: 'Tracker' },
+  { href: '/blog/how-to-build-your-first-dqf/', label: 'Guide' },
+  { href: '/privacy/', label: 'Privacy' },
+  { href: '/terms/', label: 'Terms' },
+];
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/dqf-expiration-tracker/">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h7l2.4 2.5h13.6A1.5 1.5 0 0 1 29 11v13.5a1.5 1.5 0 0 1-1.5 1.5h-23A1.5 1.5 0 0 1 3 24.5Z" fill="#d9b36c" stroke="#1e1b18" stroke-width="1.6" stroke-linejoin="round" />
+        <path d="M7 14h18" stroke="#1e1b18" stroke-width="1.4" stroke-linecap="round" />
+      </svg>
+      <span>DQF Expiration Tracker</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-list">
+        {links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              aria-current={path === link.href ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+  <div class="rule-strip">
+    <div class="container">
+      <span>{RULES_VERSION_LABEL}</span>
+      <span aria-hidden="true">·</span>
+      <span>Estimated dates, not legal advice</span>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--paper-raised);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .brand:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    flex: none;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    color: var(--ink);
+    border-bottom: 2px solid transparent;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .nav-list a:hover {
+    border-bottom-color: var(--manila-deep);
+  }
+
+  .nav-list a[aria-current='page'] {
+    border-bottom-color: var(--ink);
+  }
+
+  .rule-strip {
+    padding-block: var(--space-1);
+    color: var(--ink);
+    background: var(--manila);
+    border-top: 1px solid var(--ink);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+  }
+
+  .rule-strip .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  @media (max-width: 640px) {
+    .header-inner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .nav-list {
+      margin-inline: calc(-1 * var(--space-3));
+    }
+  }
+</style>

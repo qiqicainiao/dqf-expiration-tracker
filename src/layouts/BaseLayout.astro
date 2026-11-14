@@ -1,0 +1,57 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+import ConsentBanner from '../components/site/ConsentBanner';
+import { CANONICAL_ORIGIN } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, path, noindex = false, jsonLd = [] } = Astro.props;
+const canonical = `${CANONICAL_ORIGIN}${path}`;
+const ogTitle = title;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex,nofollow" /> : <meta name="robots" content="index,follow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DQF Expiration Tracker" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${CANONICAL_ORIGIN}/og-image.png`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${CANONICAL_ORIGIN}/og-image.png`} />
+    <meta name="theme-color" content="#f6f1e7" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline src="/_site_config.js"></script>
+    {jsonLd.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <SiteHeader path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+    <ConsentBanner client:load />
+  </body>
+</html>

@@ -1,0 +1,185 @@
+{
+    "site_id": "dqf-tracker",
+    "events": {
+        "consent_changed": {
+            "required_fields": [
+                "consent"
+            ],
+            "field_types": {
+                "consent": "bool"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "data_cleared": {
+            "required_fields": [
+                "driver_count_bucket_before"
+            ],
+            "field_types": {
+                "driver_count_bucket_before": "enum:1|2|3_5"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "driver_added": {
+            "required_fields": [
+                "driver_index_bucket",
+                "is_cdl"
+            ],
+            "field_types": {
+                "driver_index_bucket": "enum:first|second|third_plus",
+                "is_cdl": "bool"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "dwell_recorded": {
+            "required_fields": [
+                "page_area",
+                "dwell_seconds_bucket"
+            ],
+            "field_types": {
+                "page_area": "enum:tracker|article",
+                "dwell_seconds_bucket": "enum:0_15|16_60|61_180|181_plus"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "error_shown": {
+            "required_fields": [
+                "error_code",
+                "surface"
+            ],
+            "field_types": {
+                "error_code": "enum:storage_unavailable|storage_corrupted|storage_write_failed|import_invalid|import_too_large|import_unreadable|version_mismatch|export_failed",
+                "surface": "enum:tracker|import|export"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "example_prefilled": {
+            "required_fields": [
+                "source",
+                "fields_count_bucket"
+            ],
+            "field_types": {
+                "source": "enum:url_param|sample_button",
+                "fields_count_bucket": "enum:1|2|3_plus"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "json_exported": {
+            "required_fields": [
+                "driver_count_bucket"
+            ],
+            "field_types": {
+                "driver_count_bucket": "enum:1|2|3_5"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "json_imported": {
+            "required_fields": [
+                "result",
+                "driver_count_bucket"
+            ],
+            "field_types": {
+                "result": "enum:success|invalid|version_mismatch",
+                "driver_count_bucket": "enum:0|1|2|3_5"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "page_view": {
+            "required_fields": [
+                "page_path",
+                "referrer_host",
+                "device_type"
+            ],
+            "field_types": {
+                "page_path": "string(512)",
+                "referrer_host": "string(128)",
+                "device_type": "enum:desktop|mobile|tablet"
+            },
+            "auto_fields": [
+                "page_path",
+                "referrer_host",
+                "device_type"
+            ],
+            "example": {
+                "page_path": "/tools/audiogram",
+                "referrer_host": "google.com",
+                "device_type": "desktop"
+            }
+        },
+        "result_viewed": {
+            "required_fields": [
+                "driver_count_bucket",
+                "overdue_count_bucket",
+                "next_due_window",
+                "render_ms"
+            ],
+            "field_types": {
+                "driver_count_bucket": "enum:1|2|3_5",
+                "overdue_count_bucket": "enum:0|1|2_plus",
+                "next_due_window": "enum:overdue|0_30|31_60|61_plus|none",
+                "render_ms": "int"
+            },
+            "auto_fields": [],
+            "example": {}
+        },
+        "tool_completed": {
+            "required_fields": [
+                "tool_name",
+                "succeeded",
+                "duration_ms"
+            ],
+            "field_types": {
+                "tool_name": "string(64)",
+                "succeeded": "bool",
+                "duration_ms": "int"
+            },
+            "auto_fields": [],
+            "example": {
+                "tool_name": "audiogram",
+                "succeeded": true,
+                "duration_ms": 4200
+            }
+        },
+        "tool_failed": {
+            "required_fields": [
+                "error_code"
+            ],
+            "field_types": {
+                "error_code": "string(40)"
+            },
+            "auto_fields": [],
+            "example": {
+                "error_code": "render_timeout"
+            }
+        },
+        "tool_started": {
+            "required_fields": [
+                "tool_name"
+            ],
+            "field_types": {
+                "tool_name": "string(64)"
+            },
+            "auto_fields": [],
+            "example": {
+                "tool_name": "audiogram"
+            }
+        },
+        "tracker_started": {
+            "required_fields": [
+                "source"
+            ],
+            "field_types": {
+                "source": "enum:hero_cta|sample_cta|article_cta|direct"
+            },
+            "auto_fields": [],
+            "example": {}
+        }
+    }
+}

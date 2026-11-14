@@ -1,0 +1,45 @@
+---
+import { DISCLAIMER_SENTENCE, RULES_VERSION_LABEL } from '../../lib/site';
+---
+
+<section class="section" id="disclaimer" aria-labelledby="disclaimer-title">
+  <div class="container">
+    <div class="disclaimer">
+      <h2 id="disclaimer-title">Disclaimer</h2>
+      <p>{DISCLAIMER_SENTENCE}</p>
+      <ul>
+        <li>Dates are compared with the date set on your device. A wrong device date produces wrong status labels.</li>
+        <li>The tracker covers six date-based documents; it is not a complete DQF or an audit-prep system.</li>
+        <li>Regulations and state-issued credentials can change. {RULES_VERSION_LABEL}.</li>
+        <li>Nothing on this page is legal advice or a guarantee that an audit will pass.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .disclaimer {
+    padding: var(--space-5);
+    background: var(--paper-raised);
+    border: 1px dashed var(--ink-muted);
+    border-radius: var(--radius-sm);
+  }
+
+  .disclaimer h2 {
+    font-size: var(--text-xl);
+  }
+
+  .disclaimer p {
+    max-width: 84ch;
+    color: var(--ink-muted);
+  }
+
+  .disclaimer ul {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding-left: var(--space-5);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+</style>

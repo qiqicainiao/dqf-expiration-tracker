@@ -1,0 +1,210 @@
+---
+import { DQF_RULES } from '../../lib/rules/dqf';
+import { RULES_VERSION_LABEL } from '../../lib/site';
+
+const rows = DQF_RULES;
+---
+
+<section class="section" id="rules" aria-labelledby="rules-title">
+  <div class="container">
+    <p class="eyebrow">Rule index</p>
+    <h2 id="rules-title">Document expiration rules used by this tracker</h2>
+    <p class="lede">
+      Each row shows the period, the date anchor, and the regulation the tracker uses for its
+      estimate. Medical certificates use the expiration date you enter first; the 24-month figure
+      is only a fallback estimate.
+    </p>
+
+    <div class="table-wrap">
+      <table class="rule-table">
+        <caption class="visually-hidden">
+          DQF document periods and 49 CFR citations
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Document</th>
+            <th scope="col">Period</th>
+            <th scope="col">Anchor</th>
+            <th scope="col">Rule</th>
+            <th scope="col">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((rule) => (
+            <tr>
+              <th scope="row" data-label="Document">
+                <span class="doc-name">{rule.label}</span>
+                <span class="flags">
+                  {rule.recurring ? <span class="flag">Recurring</span> : <span class="flag">One-time</span>}
+                  {rule.cdlOnly ? <span class="flag">CDL only</span> : null}
+                  {rule.period.kind === 'not_tracked' ? <span class="flag">Not tracked</span> : null}
+                </span>
+              </th>
+              <td data-label="Period">{rule.periodLabel}</td>
+              <td data-label="Anchor">
+                {rule.anchor === 'issuedOn'
+                  ? 'Issue date'
+                  : rule.anchor === 'expiresOn'
+                    ? 'Certificate expiry'
+                    : rule.anchor === 'lastPulledOn'
+                      ? 'Last pull'
+                      : rule.anchor === 'completedOn'
+                        ? 'Completion date'
+                        : rule.anchor === 'verifiedOn'
+                          ? 'Verification date'
+                          : '—'}
+              </td>
+              <td data-label="Rule"><span class="citation">{rule.citation}</span></td>
+              <td data-label="Notes"><span class="rule-note">{rule.note}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="table-foot">
+      {RULES_VERSION_LABEL} · Rules can change. Verify with FMCSA or your safety consultant.
+      <a
+        href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-III/subchapter-B/part-391"
+        rel="noopener noreferrer"
+        target="_blank"
+      >Read 49 CFR Part 391 on eCFR</a>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .lede {
+    max-width: 72ch;
+    color: var(--ink-muted);
+  }
+
+  .table-wrap {
+    margin-top: var(--space-5);
+    overflow-x: auto;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+  }
+
+  .rule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .rule-table th,
+  .rule-table td {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .rule-table thead th {
+    color: var(--ink-muted);
+    background: var(--paper);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .rule-table tbody tr:last-child th,
+  .rule-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .rule-table tbody th {
+    width: 22%;
+    font-weight: 600;
+  }
+
+  .doc-name {
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+
+  .flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  .flag {
+    padding: 1px 6px;
+    color: var(--ink-muted);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .citation {
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  .rule-note {
+    color: var(--ink-muted);
+  }
+
+  .table-foot {
+    margin-top: var(--space-3);
+    color: var(--ink-muted);
+    font-size: var(--text-xs);
+  }
+
+  @media (max-width: 760px) {
+    .table-wrap {
+      overflow: visible;
+      background: transparent;
+      border: 0;
+    }
+
+    .rule-table,
+    .rule-table thead,
+    .rule-table tbody,
+    .rule-table tr,
+    .rule-table th,
+    .rule-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .rule-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    .rule-table tr {
+      margin-bottom: var(--space-3);
+      padding: var(--space-4);
+      background: var(--paper-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+    }
+
+    .rule-table th,
+    .rule-table td {
+      padding: var(--space-1) 0;
+      border-bottom: 0;
+    }
+
+    .rule-table td::before {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--ink-muted);
+      content: attr(data-label);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  }
+</style>
