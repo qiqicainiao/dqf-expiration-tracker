@@ -1,2 +1,7 @@
 # www -> apex (canonical host is https://dqfsuite.com, see <link rel="canonical">)
 https://www.dqfsuite.com/*  https://dqfsuite.com/:splat  301!
+
+# legacy tool path -> root (2026-11-18: tool is now the homepage, canonical = /)
+/dqf-expiration-tracker  /  301!
+/dqf-expiration-tracker/  /  301!
+/dqf-expiration-tracker/*  /:splat  301!

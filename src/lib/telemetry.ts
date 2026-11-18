@@ -165,7 +165,7 @@ function bindDwell(): void {
   const send = () => {
     if (dwellSent) return;
     const path = window.location.pathname;
-    const area = path.startsWith('/dqf-expiration-tracker')
+    const area = path === '/' || path.startsWith('/dqf-expiration-tracker')
       ? 'tracker'
       : path.startsWith('/blog')
         ? 'article'
