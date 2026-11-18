@@ -5,12 +5,19 @@ import { RULES_VERSION_LABEL } from '../../lib/site';
 <section class="hero">
   <div class="container hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow">Free · No account · 1–5 drivers</p>
       <h1>DQF Expiration Tracker</h1>
+      <!-- 首段必须是"答案段"：GEO/引用类抓取器与 AI 摘要取的就是第一个 <p>。
+           2026-11-19 之前首个 <p> 是 6 个词的 eyebrow，被判 first_paragraph_intent=intro。 -->
       <p class="lede">
-        Know your next estimated DQF expiration date before it becomes a problem. Enter the dates
-        you already have and see what is overdue, what is due in 30 or 60 days, and what is still
-        on file.
+        This DQF expiration tracker calculates the next due date for each driver qualification
+        item under 49 CFR Part 391 — medical card, MVR, CDL, annual review, road test and
+        employment verification — and shows which of them are already overdue or due within the
+        next 30 or 60 days.
+      </p>
+      <span class="eyebrow eyebrow--block">Free · No account · 1–5 drivers</span>
+      <p class="lede lede--sub">
+        Enter the dates you already have and see what is overdue, what is due in 30 or 60 days,
+        and what is still on file.
       </p>
       <p class="hero-actions">
         <a class="btn" href="#tracker" data-cta-source="hero_cta">Start tracking</a>
@@ -52,6 +59,15 @@ import { RULES_VERSION_LABEL } from '../../lib/site';
     max-width: 62ch;
     color: var(--ink-muted);
     font-size: var(--text-lg);
+  }
+
+  .lede--sub {
+    font-size: var(--text-md);
+  }
+
+  .eyebrow--block {
+    display: block;
+    margin-top: var(--space-3);
   }
 
   .hero-actions {

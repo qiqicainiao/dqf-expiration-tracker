@@ -51,9 +51,34 @@ const faqJsonLd = {
     },
   })),
 };
+
+// 2026-11-19：补站点层级与实体信号（抓取侧此前判 breadcrumb=absent / organization_schema=absent）。
+// 只写页面真实存在的事实，不编造 sameAs 社交账号。
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'DQF Expiration Tracker',
+      item: `${CANONICAL_ORIGIN}${path}`,
+    },
+  ],
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'DQF Expiration Tracker',
+  url: `${CANONICAL_ORIGIN}${path}`,
+  logo: `${CANONICAL_ORIGIN}/og-image.png`,
+  description:
+    'A free, browser-local date tracker for the six driver qualification file items in 49 CFR Part 391.',
+};
 ---
 
-<BaseLayout title={title} description={description} path={path} jsonLd={[appJsonLd, faqJsonLd]}>
+<BaseLayout title={title} description={description} path={path} jsonLd={[appJsonLd, faqJsonLd, breadcrumbJsonLd, organizationJsonLd]}>
   <Hero />
   <StaticSampleCard />
 
