@@ -1,0 +1,2 @@
+# www -> apex (canonical host is https://dqfsuite.com, see <link rel="canonical">)
+https://www.dqfsuite.com/*  https://dqfsuite.com/:splat  301!
