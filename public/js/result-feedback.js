@@ -157,6 +157,7 @@
 
   function watchResult(box) {
     if (!box) { return; }
+    var d = global.document;
     var shown = false;
     var reveal = function () {
       if (shown) { return; }
