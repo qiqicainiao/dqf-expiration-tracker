@@ -254,10 +254,23 @@
 
   function sendBatch(batch, attempt) {
 
-    var prodHost = false;
-    try { prodHost = /(^|\.)(lasazhaopin|guomeijiayu)\.com$/i.test(global.location.hostname); } catch (e) { }
-    if (!prodHost) {
-      if (isDebug()) { console.debug('[telemetry] non-production domain, telemetry isolated, skipping send (' + (global.location && global.location.hostname) + ')'); }
+    // 只在"明确不是真实部署"的地址上隔离上报（本地 / *.pages.dev / *.workers.dev 预览）。
+    // 这里原本是白名单 /(^|\.)(lasazhaopin|guomeijiayu)\.com$/，新站接入时忘了加域名，
+    // 结果 dqfsuite.com 从上线起每一条事件都在这里被静默丢弃：页面 200、控制台无错、
+    // 后端 0 条，任何 HTTP 层监控都看不出来（2026-11-20 实证，靠真浏览器才抓到）。
+    // 反过来判定：默认发，只拦非生产主机——新站上线不再需要记得改 SDK。
+    var host = '';
+    var proto = '';
+    try {
+      host = String(global.location.hostname || '');
+      proto = String(global.location.protocol || '');
+    } catch (e) { }
+    var nonProd = proto === 'file:' || !host
+      || host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0' || host === '::1'
+      || /\.local$/i.test(host)
+      || /\.(pages|workers)\.dev$/i.test(host);
+    if (nonProd) {
+      if (isDebug()) { console.debug('[telemetry] non-production domain, telemetry isolated, skipping send (' + host + ')'); }
       return;
     }
     var body = payloadFor(batch);

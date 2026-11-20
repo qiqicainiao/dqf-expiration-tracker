@@ -16,7 +16,9 @@ export type ErrorSurface = 'tracker' | 'import' | 'export';
 const CONSENT_KEY = 'dqf_consent_v1';
 const FLAGS_KEY = 'dqf_telemetry_flags';
 
-const SDK_PATH = '/js/telemetry-sdk.js';
+// 带 v= 是为了破缓存：SDK 修了"域名白名单把 dqfsuite.com 全丢掉"的 bug，
+// 不带版本号的话浏览器可能继续用旧的、静默丢事件的副本。
+const SDK_PATH = '/js/telemetry-sdk.js?v=1.1.1';
 
 interface SdkInitOptions {
   siteId: string;
