@@ -22,7 +22,7 @@ const ogTitle = title;
 <!doctype html>
 <html lang="en">
   <head>
-  <script src="https://api.guomeijiayu.com/js/telemetry-result-hooks.js?v=1.0.0"></script>
+  <script is:inline src="/js/telemetry-result-hooks.js?v=1.0.0"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
@@ -51,6 +51,7 @@ const ogTitle = title;
     <SiteHeader path={path} />
     <main id="main">
       <slot />
+    <script is:inline src="/js/result-feedback.js?v=1.0.0" defer></script>
     </main>
     <SiteFooter />
     <ConsentBanner client:load />

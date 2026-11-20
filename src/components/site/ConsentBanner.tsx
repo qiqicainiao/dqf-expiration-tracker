@@ -7,34 +7,22 @@ export default function ConsentBanner() {
 
   useEffect(() => {
     initTelemetry();
-    if (readConsent() !== 'unset') return;
+    const stored = readConsent();
+    // result-feedback.js 只在 __VR_CONSENT__ === true 时上报（fail-closed，不绕过同意）
+    (window as unknown as { __VR_CONSENT__?: boolean }).__VR_CONSENT__ = stored === 'granted';
+    if (stored !== 'unset') return;
 
-    let timer = 0;
-    const cleanup = () => {
-      window.removeEventListener('pointerdown', reveal);
-      window.removeEventListener('keydown', reveal);
-      window.removeEventListener('scroll', reveal);
-    };
-    function reveal() {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(() => setVisible(true), 600);
-      cleanup();
-    }
-
-    window.addEventListener('pointerdown', reveal, { passive: true });
-    window.addEventListener('keydown', reveal);
-    window.addEventListener('scroll', reveal, { passive: true });
-
-    return () => {
-      window.clearTimeout(timer);
-      cleanup();
-    };
+    // 2026-11-20 修：此前要等 pointerdown/keydown/scroll 才显示横幅（还额外延迟 600ms）。
+    // 结果是"打开看一眼就走"的访客永远没有表态机会，这个站永远只有"未表态"流量，
+    // pv_real 与可用样本结构性为 0。同意必须首屏就问，且拒绝后功能完全不变。
+    setVisible(true);
   }, []);
 
   if (!visible || decided) return null;
 
   const choose = (next: 'granted' | 'denied') => {
     setConsent(next);
+    (window as unknown as { __VR_CONSENT__?: boolean }).__VR_CONSENT__ = next === 'granted';
     setDecided(true);
     setVisible(false);
   };
