@@ -1,0 +1,53 @@
+---
+/**
+ * ConsentBanner（纯 Astro 版，2026-11-20）
+ *
+ * 为什么从 React 版换掉：
+ *   1) 原 React 版要等 pointerdown/keydown/scroll 才 setVisible → 首屏不可见，绝大多数访客永远不表态；
+ *   2) 更致命的是，Astro 的 hydration 用内联 script，而本站 CSP 是 `script-src 'self'`，
+ *      内联脚本被拦 → 组件根本没 hydrate → 横幅从未出现过（HTTP 层完全看不出来）。
+ * 纯 Astro + 外部打包 script 既避开 CSP，也不需要框架运行时。
+ */
+---
+<div id="dqf-consent" class="consent-banner" role="region" aria-label="Privacy consent" hidden>
+  <div class="consent-inner">
+    <p class="consent-title">匿名使用统计</p>
+    <p class="consent-body">
+      用匿名的使用事件改进到期规则（例如"哪类证件最容易漏"）。不上传司机姓名、证件号码或备份文件，
+      你的数据始终留在本机浏览器。可以拒绝，工具功能完全不受影响。
+    </p>
+    <div class="consent-actions">
+      <button type="button" id="dqf-consent-accept" class="btn">同意</button>
+      <button type="button" id="dqf-consent-reject" class="btn btn--ghost">拒绝</button>
+      <a class="consent-link" href="/privacy/">隐私说明</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { readConsent, setConsent } from '../../lib/telemetry';
+
+  const box = document.getElementById('dqf-consent');
+  const accept = document.getElementById('dqf-consent-accept');
+  const reject = document.getElementById('dqf-consent-reject');
+  const w = window as unknown as { __VR_CONSENT__?: boolean };
+
+  if (box && accept && reject) {
+    const stored = readConsent();
+    // result-feedback.js 只在 __VR_CONSENT__ === true 时上报（fail-closed）
+    w.__VR_CONSENT__ = stored === 'granted';
+    if (stored === 'unset') {
+      box.hidden = false;   // 首屏直接问，不等任何交互
+    }
+    accept.addEventListener('click', () => {
+      setConsent('granted');
+      w.__VR_CONSENT__ = true;
+      box.hidden = true;
+    });
+    reject.addEventListener('click', () => {
+      setConsent('denied');
+      w.__VR_CONSENT__ = false;
+      box.hidden = true;
+    });
+  }
+</script>
