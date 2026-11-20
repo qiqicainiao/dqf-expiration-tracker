@@ -22,7 +22,7 @@ const ogTitle = title;
 <!doctype html>
 <html lang="en">
   <head>
-  <script is:inline src="/js/telemetry-result-hooks.js?v=1.0.0"></script>
+    <script is:inline src="/js/telemetry-result-hooks.js?v=1.0.2"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
@@ -51,9 +51,17 @@ const ogTitle = title;
     <SiteHeader path={path} />
     <main id="main">
       <slot />
-    <script is:inline src="/js/result-feedback.js?v=1.0.1" defer></script>
+    <script is:inline src="/js/result-feedback.js?v=1.0.2" defer></script>
     </main>
     <SiteFooter />
     <ConsentBanner />
+    <script>
+      // 必须显式初始化 SDK：telemetry.ts 的 initTelemetry() 只负责 init 与挂载监听，
+      // 没有任何地方会自动调用它。历史上这里漏了调用 → SDK 从未 init →
+      // setConsent() 里的 client.track('consent_changed') 全部静默丢弃，
+      // 表现为"用户点了同意但后端 /track 一条都没有"（HTTP 层完全看不出来）。
+      import { initTelemetry } from '../lib/telemetry';
+      initTelemetry();
+    </script>
   </body>
 </html>

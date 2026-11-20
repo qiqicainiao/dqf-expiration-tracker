@@ -1,4 +1,15 @@
 # Cloudflare Pages response headers. Pages does not read .htaccess; this file is the source of truth.
+#
+# !! 本文件是唯一生效的那一份 !!
+#   Pages 项目 build_command = `npm run build`、destination_dir = `dist`，
+#   Astro 把 public/ 原样复制进 dist/。所以只有 public/_headers 会进产物；
+#   仓库根目录曾有的那份 _headers 是死文件（已删除）——改它不会有任何效果，
+#   2026-11-20 就因此白改一轮：线上 CSP 一直没变，页面照旧全挂。
+#
+# script-src 里的 __INLINE_SCRIPT_HASHES__ 由 scripts/emit-csp-hashes.mjs 在
+# postbuild 阶段替换成**当前构建真实产生**的内联脚本 sha256。
+# 不在源码里手写哈希的原因：Astro 每次构建重新生成 hydration runtime，
+# 手抄哈希一旦随构建漂移就全部失配，症状是"线上 HTTP 200 但所有 JS 都被拦"。
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
@@ -17,4 +28,4 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' __INLINE_SCRIPT_HASHES__ https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://cloudflareinsights.com; worker-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
