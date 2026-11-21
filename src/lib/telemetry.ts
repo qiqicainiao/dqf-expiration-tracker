@@ -256,11 +256,25 @@ export function trackDataCleared(driverCountBefore: number): void {
   });
 }
 
+/** 失败发生在哪一段 —— 排障的第一分叉。按 error code 精确映射，不看 surface（surface 只说是哪个面板）。 */
+const STAGE_BY_ERROR_CODE: Record<string, string> = {
+  storage_unavailable: 'init',
+  storage_write_failed: 'compute',
+  storage_corrupted: 'parse',
+  import_invalid: 'parse',
+  import_unreadable: 'parse',
+  import_too_large: 'input',
+  version_mismatch: 'parse',
+  export_failed: 'compute'
+};
+
 export function trackError(code: ErrorCode, surface: ErrorSurface): void {
   const now = Date.now();
   if (errorSentAt[code] && now - errorSentAt[code] < 30000) return;
   errorSentAt[code] = now;
   track('error_shown', { error_code: code, surface });
+  // 跨站统一口径的第二行：error_shown 带 surface，tool_failed 带标准阶段。
+  track('tool_failed', { error_code: code, error_stage: STAGE_BY_ERROR_CODE[code] || 'unknown' });
 }
 
 export function driverCountBucket(count: number): '1' | '2' | '3_5' {
