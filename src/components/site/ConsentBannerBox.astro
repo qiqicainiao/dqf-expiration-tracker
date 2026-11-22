@@ -49,5 +49,17 @@
       w.__VR_CONSENT__ = false;
       box.hidden = true;
     });
+
+    // P1-7：页脚 Cookie settings = 撤回入口。撤回后立刻重开横幅，可以马上改主意。
+    // setConsent('denied') 内部会调 SDK 的 setConsent(false)，会话标识与缓冲一并清掉（P1-6）。
+    const settings = document.getElementById('dqf-consent-settings');
+    if (settings) {
+      settings.addEventListener('click', (e) => {
+        e.preventDefault();
+        setConsent('denied');
+        w.__VR_CONSENT__ = false;
+        box.hidden = false;
+      });
+    }
   }
 </script>
