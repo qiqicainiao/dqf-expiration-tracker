@@ -19,13 +19,66 @@
   if (global.__VR_RESULT_FEEDBACK__) { return; }
   global.__VR_RESULT_FEEDBACK__ = true;
 
-  var REASONS = [
-    ['wrong_result', '结果不对'],
-    ['missing_feature', '缺了我要的东西'],
-    ['too_slow', '太慢'],
-    ['confusing', '看不懂'],
-    ['other', '其他']
-  ];
+  /**
+   * 多语言（2026-11-22）。为什么必须内置：
+   * 这份组件被复制到 9 个站，其中 7 个是英文站（waveformkit / dqfsuite / gptseoaudit ...），
+   * 文案硬编码中文 → 英文页面上弹出"这个结果有用吗？有用/没用"。
+   * 体检当时一条判据都没查文案语言，所以线上挂了半个月没人发现（用户抽样两站都命中）。
+   *
+   * 语言解析顺序：站点配置显式声明 > <html lang> > 默认 en。
+   * 默认取 en 是刻意的：中文站一定会写 lang="zh-CN"；英文站若漏声明，
+   * 宁可出英文也不该在英文页面里冒出中文。
+   */
+  var I18N = {
+    en: {
+      label: 'Was this useful?',
+      good: 'Yes',
+      bad: 'No',
+      submit: 'Send',
+      thanksGood: 'Thanks!',
+      thanksBad: "Got it — we'll work on that.",
+      noConsent: 'Noted locally. Anonymous stats are off, so nothing was sent.',
+      noSite: 'Noted, but the site id is missing so it could not be sent.',
+      reasons: [
+        ['wrong_result', 'Wrong result'],
+        ['missing_feature', 'Missing something I needed'],
+        ['too_slow', 'Too slow'],
+        ['confusing', 'Hard to understand'],
+        ['other', 'Other']
+      ]
+    },
+    zh: {
+      label: '这个结果有用吗？',
+      good: '有用',
+      bad: '没用',
+      submit: '提交',
+      thanksGood: '谢谢！',
+      thanksBad: '收到，我们会按这个方向改。',
+      noConsent: '已记录你的选择（未同意匿名统计，本次不上报）',
+      noSite: '已记录，但站点标识缺失，无法上报',
+      reasons: [
+        ['wrong_result', '结果不对'],
+        ['missing_feature', '缺了我要的东西'],
+        ['too_slow', '太慢'],
+        ['confusing', '看不懂'],
+        ['other', '其他']
+      ]
+    }
+  };
+
+  function pickLang() {
+    var c = global.__SITE_CONFIG__ || global.__TP_ENV__ || {};
+    var declared = String(c.LANG || c.lang || c.LOCALE || c.locale || '').toLowerCase();
+    if (declared.indexOf('zh') === 0) { return 'zh'; }
+    if (declared.indexOf('en') === 0) { return 'en'; }
+    var htmlLang = '';
+    try { htmlLang = String(global.document.documentElement.getAttribute('lang') || '').toLowerCase(); } catch (e) { }
+    if (htmlLang.indexOf('zh') === 0) { return 'zh'; }
+    return 'en';
+  }
+
+  var T = I18N[pickLang()] || I18N.en;
+  var REASONS = T.reasons;
 
   function cfg() {
     var c = global.__SITE_CONFIG__ || global.__TP_ENV__ || {};
@@ -35,6 +88,15 @@
   }
 
   function sessRef(siteId) {
+    // 唯一来源优先：站点跑共享 SDK 时，会话标识必须与行为事件同一份。
+    // 两套 id 并存 → 反馈事件的 sess_ref 服务端校验不过（或把同一段会话拆成两段）。
+    try {
+      var t = global.Telemetry;
+      if (t && typeof t._diag === 'function') {
+        var d = t._diag();
+        if (d && d.sessRef && String(d.sessRef).indexOf(siteId + ':') === 0) { return String(d.sessRef); }
+      }
+    } catch (e) { }
     try {
       var v = global.sessionStorage.getItem('vidrank_sess_ref');
       if (v && v.indexOf(siteId + ':') === 0) { return v; }
@@ -75,9 +137,9 @@
     box.style.cssText = 'margin:16px 0;padding:12px 14px;border:1px solid rgba(128,128,128,.28);border-radius:10px;'
       + 'font-size:14px;line-height:1.5;display:flex;flex-wrap:wrap;gap:8px;align-items:center';
 
-    var label = el('span', null, '这个结果有用吗？');
-    var good = el('button', 'vr-fb-good', '有用');
-    var bad = el('button', 'vr-fb-bad', '没用');
+    var label = el('span', null, T.label);
+    var good = el('button', 'vr-fb-good', T.good);
+    var bad = el('button', 'vr-fb-bad', T.bad);
     [good, bad].forEach(function (b) {
       b.type = 'button';
       b.style.cssText = 'padding:6px 12px;border-radius:8px;border:1px solid rgba(128,128,128,.35);'
@@ -97,7 +159,7 @@
       o.value = r[0];
       sel.appendChild(o);
     });
-    var submit = el('button', 'vr-fb-submit', '提交');
+    var submit = el('button', 'vr-fb-submit', T.submit);
     submit.type = 'button';
     submit.style.cssText = 'padding:6px 12px;border-radius:8px;border:0;background:#2563eb;color:#fff;cursor:pointer;font:inherit';
 
@@ -113,13 +175,13 @@
 
     function fire(verdict, reason) {
       if (global.__VR_CONSENT__ !== true) {
-        done('已记录你的选择（未同意匿名统计，本次不上报）');
+        done(T.noConsent);
         return;
       }
       var siteId = cfg().siteId;
-      if (!siteId) { done('已记录，但站点标识缺失，无法上报'); return; }
+      if (!siteId) { done(T.noSite); return; }
       send(siteId, { event: 'result_feedback', verdict: verdict, reason_tag: reason, output_kind: outputKind || 'other' });
-      done(verdict === 'good' ? '谢谢！' : '收到，我们会按这个方向改。');
+      done(verdict === 'good' ? T.thanksGood : T.thanksBad);
     }
 
     good.addEventListener('click', function () { fire('good', 'none'); });
