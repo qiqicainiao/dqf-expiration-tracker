@@ -25,8 +25,8 @@ import { DISCLAIMER_SENTENCE, RULES_VERSION_LABEL, siteConfig } from '../../lib/
   <div class="container footer-meta">
     <span>{RULES_VERSION_LABEL}</span>
     <span aria-hidden="true">·</span>
-    <!-- 2026-11-19：页面需要可机读的"最后更新"时间（<time datetime>）。
-         之前只有纯文本 "Last rule update"，抓取侧判 date:missing。 -->
+    {/* Machine-readable "page last updated" (<time datetime>) is required by crawlers.
+        Before 2026-11-19 this was plain text "Last rule update", scored date:missing. */}
     <span>Page last updated <time datetime="2026-11-19">19 Nov 2026</time></span>
     <span aria-hidden="true">·</span>
     <span>Version {siteConfig.VERSION}</span>
