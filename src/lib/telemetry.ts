@@ -18,7 +18,7 @@ const FLAGS_KEY = 'dqf_telemetry_flags';
 
 // 带 v= 是为了破缓存：SDK 修了"域名白名单把 dqfsuite.com 全丢掉"的 bug，
 // 不带版本号的话浏览器可能继续用旧的、静默丢事件的副本。
-const SDK_PATH = '/js/telemetry-sdk.js?v=1.3.0';
+const SDK_PATH = '/js/telemetry-sdk.js?v=2.2.0';
 
 interface SdkInitOptions {
   siteId: string;
@@ -239,6 +239,20 @@ export function trackResultViewed(stats: {
 
 export function trackJsonExported(driverCount: number): void {
   track('json_exported', { driver_count_bucket: driverCountBucket(driverCount) });
+}
+
+/**
+ * Q3 的 export 分子（九站统一事件名）。
+ * 与 json_exported 并存而不是替换：前者是对齐判定口径的标准名，
+ * 后者是本站历史字段，聚合报表还在用，删了会断历史序列。
+ */
+export function trackExported(format: 'json' | 'csv', itemCount: number): void {
+  track('export', { export_format: format, item_count: itemCount });
+}
+
+/** Q3 的 copy 分子。复制的是"最紧急三项"的纯文本清单。 */
+export function trackResultCopied(copyFormat: string, itemCount: number): void {
+  track('result_copied', { copy_format: copyFormat, item_count: itemCount });
 }
 
 export function trackJsonImported(result: ImportResult, driverCount: number): void {

@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { formatHumanDate } from '../../lib/calc/date';
 import { fleetTopEntries } from '../../lib/calc/expiry';
+import { trackResultCopied } from '../../lib/telemetry';
 import type { DriverRecord } from '../../lib/storage/schema';
 
 interface Props {
@@ -19,13 +20,51 @@ function urgencyText(days: number): string {
 
 export default function FleetSummary({ drivers, today }: Props) {
   const entries = useMemo(() => fleetTopEntries(drivers, today, 3), [drivers, today]);
+  const [copied, setCopied] = useState(false);
   if (entries.length === 0) return null;
+
+  const copyList = () => {
+    const lines = entries.map((entry) => {
+      const index = drivers.findIndex((driver) => driver.uuid === entry.driverId);
+      const label = entry.driverLabel.trim() || `Driver ${index + 1}`;
+      return `${label} — ${entry.item.label}: ${formatHumanDate(entry.item.dueOn as string)} (${urgencyText(entry.item.daysRemaining as number)})`;
+    });
+    const text = ['DQF expiry — 3 most urgent items', ...lines].join('\n');
+    const done = (ok: boolean) => {
+      if (!ok) return;
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+      trackResultCopied('text', entries.length);
+    };
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(text).then(() => done(true)).catch(() => done(false));
+      return;
+    }
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand ? document.execCommand('copy') : false;
+      document.body.removeChild(ta);
+      done(ok);
+    } catch {
+      done(false);
+    }
+  };
 
   return (
     <section className="fleet-summary" aria-labelledby="fleet-title" aria-live="polite">
       <h3 id="fleet-title">Fleet summary · 3 most urgent items</h3>
       <p className="fleet-note">
         Across all drivers in this browser. Calculated with your device date.
+        {' '}
+        <button type="button" className="btn btn--ghost btn--small" onClick={copyList}>
+          {copied ? 'Copied' : 'Copy list'}
+        </button>
       </p>
       <ul className="fleet-list">
         {entries.map((entry) => {

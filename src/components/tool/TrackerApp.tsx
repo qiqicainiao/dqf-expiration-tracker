@@ -30,6 +30,7 @@ import {
   trackDriverAdded,
   trackError,
   trackExamplePrefilled,
+  trackExported,
   trackJsonExported,
   trackJsonImported,
   trackResultViewed,
@@ -344,6 +345,7 @@ export default function TrackerApp() {
     const ok = downloadJson(filename, store);
     if (ok) {
       trackJsonExported(driversRef.current.length);
+      trackExported('json', driversRef.current.length);
     } else {
       trackError('export_failed', 'export');
     }
