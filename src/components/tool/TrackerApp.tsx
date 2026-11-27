@@ -25,17 +25,6 @@ import {
   saveStore,
 } from '../../lib/storage/store';
 import { siteConfig } from '../../lib/site';
-import {
-  trackDataCleared,
-  trackDriverAdded,
-  trackError,
-  trackExamplePrefilled,
-  trackExported,
-  trackJsonExported,
-  trackJsonImported,
-  trackResultViewed,
-  startTrackerOnce,
-} from '../../lib/telemetry';
 import DriverCard from './DriverCard';
 import EmptyState from './EmptyState';
 import FleetSummary from './FleetSummary';
@@ -175,7 +164,6 @@ export default function TrackerApp() {
       storageModeRef.current = 'memory';
       setStorageMode('memory');
       setSaveState('error');
-      trackError('storage_write_failed', 'tracker');
       setBanner({
         kind: 'danger',
         text: 'Your browser is blocking local storage. Data will be lost when you close this tab. Export a JSON backup.',
@@ -194,7 +182,6 @@ export default function TrackerApp() {
       setSavedAt(result.store.meta?.lastSavedAt ?? result.store.updatedAt);
       setSaveState('saved');
     } else if (result.status === 'corrupted') {
-      trackError('storage_corrupted', 'tracker');
       setBanner({
         kind: 'danger',
         text: result.message,
@@ -204,7 +191,6 @@ export default function TrackerApp() {
       storageModeRef.current = 'memory';
       setStorageMode('memory');
       setSaveState('error');
-      trackError('storage_unavailable', 'tracker');
       setBanner({
         kind: 'danger',
         text: 'Your browser is blocking local storage. Data will be lost when you close this tab. Export a JSON backup.',
@@ -222,7 +208,6 @@ export default function TrackerApp() {
     if (prefill.invalidCount > 0) setPrefillInvalid(true);
     if (prefill.driver) {
       setDraft(prefill.driver);
-      trackExamplePrefilled(Object.keys(prefill.driver.documents).length);
     }
 
     setBooting(false);
@@ -266,7 +251,6 @@ export default function TrackerApp() {
   }, [saver]);
 
   const handleDriverChange = useCallback((uuid: string, updated: DriverRecord) => {
-    startTrackerOnce();
     setDrivers((previous) =>
       previous.map((driver) => (driver.uuid === uuid ? { ...updated, uuid: driver.uuid } : driver)),
     );
@@ -276,7 +260,6 @@ export default function TrackerApp() {
     if (driversRef.current.length + (draftRef.current ? 1 : 0) >= siteConfig.MAX_DRIVERS) {
       return;
     }
-    trackDriverAdded(driversRef.current.length + (draftRef.current ? 1 : 0) + 1, true);
     const now = new Date().toISOString();
     setDrivers((previous) => [
       ...previous,
@@ -327,14 +310,17 @@ export default function TrackerApp() {
 
   const handleSaveDraft = useCallback(
     (driver: DriverRecord) => {
-      trackDriverAdded(driversRef.current.length + 1, driver.isCdlDriver);
-      setDrivers((previous) => {
-        if (previous.length >= siteConfig.MAX_DRIVERS) return previous;
-        return [...previous, driver];
-      });
+      if (driversRef.current.length >= siteConfig.MAX_DRIVERS) {
+        showToast('The free version supports up to 5 drivers. Remove a driver before saving this example.');
+        return false;
+      }
+      const nextDrivers = [...driversRef.current, driver];
+      driversRef.current = nextDrivers;
+      setDrivers(nextDrivers);
       setDraft(null);
       setPrefillInvalid(false);
       showToast('Example dates saved in this browser.');
+      return true;
     },
     [showToast],
   );
@@ -343,12 +329,6 @@ export default function TrackerApp() {
     const store = buildExport(createStore(driversRef.current, 'manual'));
     const filename = `dqf-tracker-backup-${todayDateOnly()}.json`;
     const ok = downloadJson(filename, store);
-    if (ok) {
-      trackJsonExported(driversRef.current.length);
-      trackExported('json', driversRef.current.length);
-    } else {
-      trackError('export_failed', 'export');
-    }
     showToast(
       ok ? 'JSON backup downloaded.' : 'Could not create the download. Try another browser.',
     );
@@ -360,7 +340,6 @@ export default function TrackerApp() {
       setDraft(null);
       setImportOpen(false);
       const ok = persist(store.drivers, 'import');
-      trackJsonImported('success', store.drivers.length);
       showToast(
         ok
           ? `Imported ${store.drivers.length} driver${store.drivers.length === 1 ? '' : 's'}.`
@@ -372,7 +351,6 @@ export default function TrackerApp() {
 
   const handleClear = useCallback(() => {
     saver.cancel();
-    trackDataCleared(driversRef.current.length);
     if (pendingDelete.current) {
       window.clearTimeout(pendingDelete.current.timer);
       pendingDelete.current = null;
@@ -419,27 +397,6 @@ export default function TrackerApp() {
     if (!draft || !today) return [];
     return computeDriverExpiries(draft, today);
   }, [draft, today]);
-
-  useEffect(() => {
-    if (booting || !today || drivers.length === 0) return;
-    let overdue = 0;
-    let dated = 0;
-    let nextDays: number | null = null;
-    for (const items of driverResults.values()) {
-      for (const item of items) {
-        if (item.status === 'overdue') overdue += 1;
-        if (item.daysRemaining !== null) {
-          dated += 1;
-          nextDays = nextDays === null ? item.daysRemaining : Math.min(nextDays, item.daysRemaining);
-        }
-      }
-    }
-    if (dated === 0) return;
-    const timer = window.setTimeout(() => {
-      trackResultViewed({ driverCount: drivers.length, overdueCount: overdue, nextDueDays: nextDays });
-    }, 1200);
-    return () => window.clearTimeout(timer);
-  }, [booting, today, drivers.length, driverResults]);
 
   const totalSlots = drivers.length + (draft ? 1 : 0);
   const atLimit = totalSlots >= siteConfig.MAX_DRIVERS;

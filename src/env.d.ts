@@ -6,18 +6,13 @@ declare global {
   interface Window {
     __SITE_CONFIG__?: Partial<SiteConfig>;
 
-    Telemetry?: {
-      init(options: {
-        siteId: string;
-        endpoint: string;
-        manifestUrl?: string;
-        consent?: boolean;
-        consentMode?: 'granted' | 'denied' | 'unset';
-        production?: boolean;
-      }): void;
-      track(event: string, payload?: Record<string, unknown>): void;
+    VR: {
+      run(site: string): {
+        ok(): void;
+        fail(errorCode?: 'input_invalid' | 'timeout' | 'upstream_5xx' | 'quota' | 'auth' | 'unknown'): void;
+      };
       setConsent(value: boolean): void;
-      _diag?(): unknown;
+      debug(): { consentMode: 'granted' | 'denied' | 'unset' };
     };
   }
 }

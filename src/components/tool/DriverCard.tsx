@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -19,7 +19,7 @@ interface Props {
   isDraft?: boolean;
   onChange: (driver: DriverRecord) => void;
   onRemove?: () => void;
-  onSaveDraft?: (driver: DriverRecord) => void;
+  onSaveDraft?: (driver: DriverRecord) => boolean;
   onClearDraft?: () => void;
   onNotify?: (message: string) => void;
 }
@@ -74,15 +74,30 @@ export default function DriverCard({
 
   const documentsMessage = errors.documents?.message;
 
-  const handleSubmit = form.handleSubmit((values) => {
-    const next = driverFromForm(values, initialRef.current);
-    onChange(next);
-    if (isDraft) {
-      onSaveDraft?.(next);
-    } else {
-      onNotify?.('Driver saved in this browser.');
-    }
-  });
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const run = window.VR.run('dqf-tracker');
+    void form.handleSubmit(
+      (values) => {
+        try {
+          const next = driverFromForm(values, initialRef.current);
+          onChange(next);
+          if (isDraft) {
+            const saved = onSaveDraft?.(next) === true;
+            if (!saved) {
+              run.fail('quota');
+              return;
+            }
+          } else {
+            onNotify?.('Driver saved in this browser.');
+          }
+          run.ok();
+        } catch {
+          run.fail('unknown');
+        }
+      },
+      () => run.fail('input_invalid'),
+    )(event);
+  };
 
   const driverName = driver.label.trim() || `Driver ${index + 1}`;
 

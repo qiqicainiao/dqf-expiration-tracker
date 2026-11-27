@@ -4,7 +4,7 @@ import LegalLayout from '../../layouts/LegalLayout.astro';
 const path = '/privacy/';
 const title = 'Privacy Policy — DQF Expiration Tracker';
 const description =
-  'How the DQF Expiration Tracker handles driver labels and dates locally, and what optional anonymous analytics (bucketed counts, page path, device type) are recorded with your consent.';
+  'How the DQF Expiration Tracker handles driver labels and dates locally, and what optional anonymous analytics are recorded with your consent.';
 
 import { CANONICAL_ORIGIN } from '../../lib/site';
 
@@ -28,14 +28,14 @@ const jsonLd = [
 ];
 ---
 
-<LegalLayout title={title} description={description} path={path} updated="2026-11-13" jsonLd={jsonLd}>
+<LegalLayout title={title} description={description} path={path} updated="2026-11-27" jsonLd={jsonLd}>
   <h2>Summary</h2>
   <p>
     The DQF Expiration Tracker is a free, single-page tool. The driver labels and dates you enter are
-    stored in your browser's localStorage and are never uploaded. Analytics are optional: if you
-    accept, we record anonymous, aggregated usage events (page path, device type, referrer host,
-    bucketed counts). If you reject, the tracker works the same and we only receive event names and
-    counts. You can export a JSON backup or delete your data at any time.
+    stored in your browser's localStorage and are never uploaded. Before you choose, we only make a
+    minimal anonymous page-visit count without identifiers or storage. Accepting enables detailed
+    usage analytics; rejecting stops usage analytics requests. The tracker works the same either way.
+    You can export a JSON backup or delete your data at any time.
   </p>
 
   <h2>What this build stores in your browser</h2>
@@ -44,7 +44,7 @@ const jsonLd = [
     <li><strong>Document dates</strong> you enter for the medical certificate, MVR, CDL, annual review, road test, and employment verification.</li>
     <li><strong>CDL switch</strong>, which controls whether a CDL expiration is included in the calculation.</li>
     <li><strong>Record metadata</strong>: a random identifier, a last-modified timestamp, the schema version, and the site identifier.</li>
-    <li><strong>Your analytics choice</strong>, stored under the key <code>dqf_consent_v1</code>.</li>
+    <li><strong>Your analytics choice</strong>, stored under the key <code>vr_consent_v1</code>.</li>
   </ul>
   <p>
     Tracker records are stored under the localStorage key <code>dqf_tracker_v1</code>. If saved data
@@ -53,30 +53,20 @@ const jsonLd = [
     text from the warning banner and then delete it through your browser's site-data controls.
   </p>
 
-  <h2>Optional analytics (your choice)</h2>
+  <h2>Usage analytics and your choice</h2>
   <p>
-    Analytics are off until you choose. The banner asks after your first interaction, and both
-    "Allow analytics" and "Reject" are always available. If you allow, the page sends events to our
-    own first-party endpoint <code>/bff/dqf-tracker/track</code>. We do not load third-party
-    analytics, advertising, or social scripts.
+    The consent banner appears on first load. Analytics use our first-party endpoint
+    <code>/bff/dqf-tracker/track</code>; we do not load third-party analytics, advertising, or social scripts.
   </p>
-  <p>Event rows can contain:</p>
   <ul>
-    <li><strong>Event names</strong> such as <code>page_view</code>, <code>tracker_started</code>, <code>driver_added</code>, <code>result_viewed</code>, <code>json_exported</code>, <code>json_imported</code>, <code>data_cleared</code>, <code>dwell_recorded</code>, and <code>error_shown</code>.</li>
-    <li><strong>Bucketed counts</strong> such as "1 driver", "2 drivers", or "3–5 drivers"; overdue counts as "0", "1", or "2 or more". Exact counts are not sent.</li>
-    <li><strong>Context fields</strong>: page path, device type (desktop, tablet, mobile), referrer host, a time-on-page bucket, a render time in milliseconds, and fixed error codes.</li>
-    <li><strong>Session and visitor identifiers</strong>: a random session identifier stored in sessionStorage for the tab session, and a salted, one-way hashed visitor identifier computed on the server. We do not keep your IP address in analytics records.</li>
+    <li><strong>Before you choose:</strong> the SDK sends one minimal <code>visit</code> per page path for an anonymous access count. It contains no session or visitor identifier, writes no analytics cookie or browser storage, and supports no cross-session recognition or tool-run reporting.</li>
+    <li><strong>If you accept:</strong> the SDK records <code>visit</code>, <code>run_start</code>, and <code>run_done</code> events. These can contain page path, device type, referrer host, the tool identifier, elapsed milliseconds, success or failure, and fixed error codes, together with pseudonymous session and visitor identifiers.</li>
+    <li><strong>If you reject:</strong> no usage analytics requests are sent after your choice. Refusing does not reduce the functionality of the tracker.</li>
   </ul>
   <p>
-    <strong>Never recorded:</strong> driver names or nicknames, any document date, CDL dates, the
+    <strong>Never recorded:</strong> driver names or nicknames, document dates, CDL dates, the
     contents or file name of an exported or imported backup, your email address, or the full URL
-    including query string. Tracking is decoupled from your driver records: even if localStorage is
-    blocked, aggregated analytics still work.
-  </p>
-  <p>
-    If you reject analytics, the tracker sends only anonymous aggregate rows — the event name and a
-    count — with no business fields, no page path, and no identifiers. Refusing does not reduce the
-    functionality of the tracker.
+    including query string. Tracking is decoupled from your driver records.
   </p>
   <p>
     You can change your choice at any time:
@@ -86,10 +76,12 @@ const jsonLd = [
   </p>
   <script is:inline>
     document.getElementById('reset-consent')?.addEventListener('click', function () {
+      window.VR.setConsent(false);
       try {
+        window.localStorage.removeItem('vr_consent_v1');
         window.localStorage.removeItem('dqf_consent_v1');
       } catch (e) {
-        /* storage blocked: nothing to reset */
+        /* storage blocked: the SDK has still withdrawn the current session */
       }
       window.location.reload();
     });

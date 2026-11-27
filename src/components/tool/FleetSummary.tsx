@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { formatHumanDate } from '../../lib/calc/date';
 import { fleetTopEntries } from '../../lib/calc/expiry';
-import { trackResultCopied } from '../../lib/telemetry';
 import type { DriverRecord } from '../../lib/storage/schema';
 
 interface Props {
@@ -34,7 +33,6 @@ export default function FleetSummary({ drivers, today }: Props) {
       if (!ok) return;
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
-      trackResultCopied('text', entries.length);
     };
     if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
       navigator.clipboard.writeText(text).then(() => done(true)).catch(() => done(false));

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { parseImportText } from '../../lib/storage/store';
 import { siteConfig } from '../../lib/site';
-import { trackError, trackJsonImported } from '../../lib/telemetry';
 import type { TrackerStoreV1 } from '../../lib/storage/schema';
 
 interface Props {
@@ -55,14 +54,10 @@ export default function ImportDialog({ open, currentCount, onClose, onConfirm }:
     if (!file) return;
     if (!file.name.toLowerCase().endsWith('.json')) {
       setErrors(['Choose a .json backup file.']);
-      trackJsonImported('invalid', 0);
-      trackError('import_invalid', 'import');
       return;
     }
     if (file.size > siteConfig.MAX_JSON_BYTES) {
       setErrors(['This file is larger than 256 KB.']);
-      trackJsonImported('invalid', 0);
-      trackError('import_too_large', 'import');
       return;
     }
     setFileName(file.name);
@@ -74,14 +69,9 @@ export default function ImportDialog({ open, currentCount, onClose, onConfirm }:
         setPreview(result.store);
       } else {
         setErrors(result.errors);
-        const versionMismatch = result.errors.some((error) => /newer version/i.test(error));
-        trackJsonImported(versionMismatch ? 'version_mismatch' : 'invalid', 0);
-        trackError(versionMismatch ? 'version_mismatch' : 'import_invalid', 'import');
       }
     } catch {
       setErrors(['We could not read that file. Try another backup.']);
-      trackJsonImported('invalid', 0);
-      trackError('import_unreadable', 'import');
     } finally {
       setReading(false);
     }

@@ -7,12 +7,14 @@
 - [How to build your first DQF](https://dqfsuite.com/blog/how-to-build-your-first-dqf/): guide to the documents, dates, and common gaps. A guide, not a compliance determination.
 - [Privacy policy](https://dqfsuite.com/privacy/): local storage, export, deletion, and what this build does not collect.
 - [Terms of service](https://dqfsuite.com/terms/): service description, no legal advice, acceptable use, liability.
+- [Pricing](https://dqfsuite.com/pricing/): free during validation; Pro plan is not yet available.
+- [Refund policy](https://dqfsuite.com/refund/): how refunds are handled once paid plans launch.
 
 ## Facts
 - Rules version: 2026-11-13.
 - Price: free during validation. No payments are available in this build.
 - Data storage: browser localStorage under `dqf_tracker_v1`; JSON export and import are available.
-- Optional first-party analytics only with consent: event names, bucketed counts, page path, device type, referrer host. Never driver names, dates, or backup contents; rejecting sends only event names and counts.
+- Optional first-party analytics in three states: before you choose, one minimal identifier-free page-visit count per path; with consent, event names, bucketed counts, page path, device type, referrer host; if rejected, no analytics requests are sent. Never driver names, dates, or backup contents.
 - Limits: up to 5 drivers per browser.
 
 ## Disclaimer

@@ -1,0 +1,74 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+
+const path = '/refund';
+const title = 'Refund Policy — DQF Expiration Tracker';
+const description = 'How refunds are handled for paid subscriptions on the DQF Expiration Tracker.';
+
+import { CANONICAL_ORIGIN } from '../../lib/site';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: CANONICAL_ORIGIN + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Refund Policy', item: CANONICAL_ORIGIN + '/refund' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Refund Policy — DQF Expiration Tracker',
+    url: CANONICAL_ORIGIN + '/refund',
+    inLanguage: 'en',
+    isPartOf: { '@type': 'WebSite', name: 'DQF Expiration Tracker', url: CANONICAL_ORIGIN + '/' },
+  },
+];
+---
+
+<LegalLayout title={title} description={description} path={path} updated="2026-11-26" jsonLd={jsonLd}>
+  <div class="legal-notice">
+    <strong>Operating entity information pending.</strong> The operating entity name, registered
+    address and company registration number for this site have not been configured yet. The contact
+    email below is a placeholder and will be replaced before launch.
+  </div>
+
+  <h2>1. Purpose</h2>
+  <p>
+    This Refund Policy explains how refunds are handled for paid subscriptions and one-time purchases
+    on this website ("the Service").
+  </p>
+
+  <h2>2. Trial period</h2>
+  <p>When a free trial is offered, cancel before it ends to avoid charges.</p>
+
+  <h2>3. Subscription refunds</h2>
+  <p>
+    Subscriptions auto-renew unless cancelled; cancellation takes effect at period end, no partial
+    refund unless law requires it.
+  </p>
+
+  <h2>4. When refunds may be issued</h2>
+  <p>
+    Duplicate/unauthorized charges or extended material unavailability not caused by you; reviewed
+    individually.
+  </p>
+
+  <h2>5. Non-refundable items</h2>
+  <p>Fulfilled digital goods may be non-refundable where permitted by law.</p>
+
+  <h2>6. How to request</h2>
+  <p>
+    Contact <a href="mailto:apj56423@gmail.com">apj56423@gmail.com</a> with order details.
+  </p>
+
+  <h2>7. Method and timing</h2>
+  <p>Approved refunds return to the original payment method; provider timing varies.</p>
+
+  <h2>8. Changes</h2>
+  <p>Updates effective when posted here.</p>
+
+  <h2>9. Contact</h2>
+  <p><a href="mailto:apj56423@gmail.com">apj56423@gmail.com</a></p>
+</LegalLayout>
