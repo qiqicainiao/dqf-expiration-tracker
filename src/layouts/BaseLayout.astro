@@ -1,6 +1,7 @@
 ---
 import '../styles/tokens.css';
 import '../styles/global.css';
+import '../styles/tool.css';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
 import ConsentBanner from '../components/site/ConsentBannerBox.astro';
@@ -12,9 +13,10 @@ interface Props {
   path: string;
   noindex?: boolean;
   jsonLd?: Record<string, unknown>[];
+  dataPage?: string;
 }
 
-const { title, description, path, noindex = false, jsonLd = [] } = Astro.props;
+const { title, description, path, noindex = false, jsonLd = [], dataPage = 'page' } = Astro.props;
 const canonical = `${CANONICAL_ORIGIN}${path}`;
 const ogTitle = title;
 ---
@@ -46,7 +48,7 @@ const ogTitle = title;
       <script type="application/ld+json" set:html={JSON.stringify(item)} />
     ))}
   </head>
-  <body>
+  <body data-page={dataPage}>
     <a class="skip-link" href="#main">Skip to main content</a>
     <SiteHeader path={path} />
     <main id="main">
@@ -54,5 +56,27 @@ const ogTitle = title;
     </main>
     <SiteFooter />
     <ConsentBanner />
+
+    <!-- Account UI: markup lives here so every page gets it from one place. -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div class="modal-backdrop" id="auth-modal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <button type="button" class="modal-close" id="auth-close" aria-label="Close">×</button>
+        <h3 id="auth-title">Sign in</h3>
+        <p class="modal-sub" id="auth-sub">Your checks and plan are tied to this account.</p>
+        <form id="auth-form" novalidate>
+          <label for="auth-email">Email</label>
+          <input type="email" id="auth-email" name="email" required autocomplete="email" placeholder="you@company.com" />
+          <label for="auth-password">Password</label>
+          <input type="password" id="auth-password" name="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters" />
+          <p class="auth-error" id="auth-error" role="alert" hidden></p>
+          <button type="submit" class="btn" id="auth-submit">Sign in</button>
+        </form>
+        <p class="modal-switch"><button type="button" class="link-btn" id="auth-switch">New here? Create an account</button></p>
+      </div>
+    </div>
+
+    <!-- Same-origin external script: allowed by script-src 'self', no inline hash needed. -->
+    <script is:inline src="/assets/js/account.js?v=3.2.0" data-account-site="dqf-tracker"></script>
   </body>
 </html>

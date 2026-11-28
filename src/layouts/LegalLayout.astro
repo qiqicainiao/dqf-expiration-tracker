@@ -7,12 +7,13 @@ interface Props {
   path: string;
   updated?: string;
   jsonLd?: Record<string, unknown>[];
+  dataPage?: string;
 }
 
-const { title, description, path, updated = '2026-11-13', jsonLd = [] } = Astro.props;
+const { title, description, path, updated = '2026-11-13', jsonLd = [], dataPage = 'page' } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} path={path} jsonLd={jsonLd}>
+<BaseLayout title={title} description={description} path={path} jsonLd={jsonLd} dataPage={dataPage}>
   <article class="legal">
     <div class="container legal-inner">
       <header class="legal-header">

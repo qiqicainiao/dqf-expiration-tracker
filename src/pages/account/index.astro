@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const path = '/account';
+const title = 'Your account — DQF Expiration Tracker';
+const description =
+  'Sign in to see the plan, renewal date and free usage for your DQF Expiration Tracker account.';
+---
+
+<BaseLayout title={title} description={description} path={path} noindex dataPage="account">
+  <div class="container account-main">
+    <h1 class="account-title">Your account</h1>
+
+    <!-- Shown only when account.js confirms a paid return (?paid=1 is a hint, not proof). -->
+    <div id="paid-banner" role="status" aria-live="polite" hidden></div>
+
+    <p class="account-loading" id="account-loading">Loading your account…</p>
+
+    <!-- Not signed in: nothing on this page belongs to the visitor yet. -->
+    <section class="account-card" id="account-guest" hidden>
+      <h2>Sign in to see your account</h2>
+      <p>Plan status and renewal date belong to the account you are signed in with — there is nothing to show until you sign in.</p>
+      <div class="account-actions">
+        <button type="button" class="btn" id="account-signin">Sign in</button>
+        <button type="button" class="btn btn--ghost" id="account-register">Create account</button>
+      </div>
+    </section>
+
+    <!-- Accounts are not open on this site (account/me returns 404). -->
+    <section class="account-card" id="account-closed" hidden>
+      <h2>Accounts are not open on this site yet</h2>
+      <p class="account-note">Everything on this site works without signing in.</p>
+    </section>
+
+    <div id="account-signedin" hidden>
+      <p class="account-lead">
+        Signed in as <strong id="account-email">—</strong><span id="account-since-wrap" hidden> · member since <span id="account-since"></span></span>
+      </p>
+
+      <section class="account-card" aria-label="Your plan">
+        <div class="account-status">
+          <span class="account-badge is-free" id="account-plan-badge">—</span>
+          <h2 id="account-plan-name">…</h2>
+        </div>
+        <p id="account-plan-line">…</p>
+        <p class="account-note" id="account-quota" hidden></p>
+        <p class="account-note" id="account-pricing-notice" hidden></p>
+        <p class="account-note" id="account-manage" hidden>Change your card or cancel from the link in your receipt email.</p>
+        <a class="btn account-cta" id="account-upgrade" href="/pricing" hidden>View plans</a>
+        <p class="account-note account-testmode" id="account-testmode" hidden>Test mode — no real charge.</p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

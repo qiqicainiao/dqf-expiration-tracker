@@ -1,11 +1,11 @@
 ---
-import LegalLayout from '../../layouts/LegalLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { CANONICAL_ORIGIN } from '../../lib/site';
 
 const path = '/pricing';
 const title = 'Pricing — DQF Expiration Tracker';
-const description = 'Pro plan pricing for the DQF Expiration Tracker: what the Pro plan will include and when checkout opens.';
-
-import { CANONICAL_ORIGIN } from '../../lib/site';
+const description =
+  'Everything on the DQF Expiration Tracker is free right now — no daily limit and no card required.';
 
 const jsonLd = [
   {
@@ -27,11 +27,25 @@ const jsonLd = [
 ];
 ---
 
-<LegalLayout title={title} description={description} path={path} updated="2026-11-26" jsonLd={jsonLd}>
-  <h2>Pro</h2>
-  <p>Pro is coming soon.</p>
-  <p>
-    We are building a Pro plan with additional features. Pricing and plan details will be published
-    on this page when the plan launches.
-  </p>
-</LegalLayout>
+<BaseLayout title={title} description={description} path={path} jsonLd={jsonLd} dataPage="pricing">
+  <section class="section">
+    <div class="container pricing-main">
+      <h1 class="pricing-title">Pricing</h1>
+
+      <section id="pricing-free-note">
+        <p>Everything on this site is free right now — no daily limit, no card required.</p>
+        <p>There is no paid tier today. When Pro launches, prices will be published on this page.</p>
+      </section>
+
+      <!-- Paid skeleton stays in the DOM but hidden until pricing.sellable === true. -->
+      <div id="pricing-plans" class="pricing-grid" hidden></div>
+      <p class="pricing-testmode" id="pricing-testmode" hidden>Test mode — no real charge.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pricing-main {
+    max-width: 760px;
+  }
+</style>
